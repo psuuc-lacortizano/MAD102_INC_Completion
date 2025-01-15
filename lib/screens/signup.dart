@@ -21,7 +21,6 @@ class _signinState extends State<signin> {
     final password = passwordcontroller.text.trim();
     final username = usernamecontroller.text.trim();
 
-    // Validate that the email, password, and username are not empty
     if (email.isEmpty || password.isEmpty || username.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

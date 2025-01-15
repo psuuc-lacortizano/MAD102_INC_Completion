@@ -11,7 +11,6 @@ class AuthServices {
           email: email, password: password);
       final user = cred.user;
       if (user != null) {
-        // Add user data to Firestore
         await firestore.collection('users').doc(user.uid).set({
           'email': email,
           'name': name,
@@ -20,9 +19,8 @@ class AuthServices {
           'friendRequests': {'sent': [], 'received': []},
         });
       }
-      return null; // Sign up successful
+      return null;
     } on FirebaseAuthException catch (e) {
-      // Return specific FirebaseAuth errors
       if (e.code == 'email-already-in-use') {
         return 'The email is already in use. Please try another email address.';
       } else if (e.code == 'weak-password') {
@@ -32,7 +30,6 @@ class AuthServices {
       }
       return 'An error occurred during signup. Please try again later.';
     } catch (e) {
-      // Handle unexpected errors
       return 'Unexpected error occurred: $e';
     }
   }
