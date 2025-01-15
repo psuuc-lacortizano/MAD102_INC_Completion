@@ -20,8 +20,8 @@ class _signinState extends State<signin> {
     final email = emailcontroller.text.trim();
     final password = passwordcontroller.text.trim();
     final username = usernamecontroller.text.trim();
-    // Validate that the email, password, and username are not empty
 
+    // Validate that the email, password, and username are not empty
     if (email.isEmpty || password.isEmpty || username.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -34,22 +34,29 @@ class _signinState extends State<signin> {
       return;
     }
     try {
-      final user = await auth.signUp(emailcontroller.text,
-          passwordcontroller.text, usernamecontroller.text);
+      final result = await auth.signUp(email, password, username);
 
-      if (user != null) {
-        print("User Created Successfully!");
+      if (result == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text("User Created Successfully!"),
+              backgroundColor: Colors.black87),
+        );
         Navigator.push(
           context,
           CupertinoPageRoute(
             builder: (context) => login(),
           ),
         );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(result), backgroundColor: Colors.black87),
+        );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error: $e'),
+          content: Text('Unexpected Error: $e'),
           backgroundColor: Colors.black87,
         ),
       );

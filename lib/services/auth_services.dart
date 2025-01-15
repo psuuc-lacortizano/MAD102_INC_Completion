@@ -11,6 +11,7 @@ class AuthServices {
           email: email, password: password);
       final user = cred.user;
       if (user != null) {
+        // Add user data to Firestore
         await firestore.collection('users').doc(user.uid).set({
           'email': email,
           'name': name,
@@ -19,8 +20,9 @@ class AuthServices {
           'friendRequests': {'sent': [], 'received': []},
         });
       }
-      return null;
+      return null; // Sign up successful
     } on FirebaseAuthException catch (e) {
+      // Return specific FirebaseAuth errors
       if (e.code == 'email-already-in-use') {
         return 'The email is already in use. Please try another email address.';
       } else if (e.code == 'weak-password') {
@@ -30,6 +32,7 @@ class AuthServices {
       }
       return 'An error occurred during signup. Please try again later.';
     } catch (e) {
+      // Handle unexpected errors
       return 'Unexpected error occurred: $e';
     }
   }
@@ -40,7 +43,7 @@ class AuthServices {
           email: email, password: password);
       return cred.user;
     } on FirebaseAuthException catch (e) {
-      print("Error Code: ${e.code}"); // Log the error code
+      print("Error Code: ${e.code}");
       if (e.code == 'invalid-credential') {
         throw 'The provided credentials are invalid. Please check your email and password.';
       } else if (e.code == 'invalid-email') {
@@ -53,7 +56,6 @@ class AuthServices {
     }
   }
 
-  // Signout method with custom error handling
   Future<void> signout() async {
     try {
       await auth.signOut();
@@ -62,7 +64,6 @@ class AuthServices {
     }
   }
 
-  // Get the current user ID
   String? getCurrentUserId() {
     try {
       return auth.currentUser?.uid;
